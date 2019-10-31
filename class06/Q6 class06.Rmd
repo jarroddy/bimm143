@@ -1,0 +1,85 @@
+---
+title: "section_1B"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r cars}
+summary(cars)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+Installing the bio3d package
+```{r}
+#install.packages("bio3d") you do this directly in the console so it doesn't re-install every run
+```
+
+```{r}
+library(bio3d)
+s1 <- read.pdb("4AKE") # kinase with drug
+s2 <- read.pdb("1AKE") # kinase no drug
+s3 <- read.pdb("1E4Y") # kinase with drug
+
+s1.chainA <- trim.pdb(s1, chain="A", elety="CA")
+s2.chainA <- trim.pdb(s2, chain="A", elety="CA")
+s3.chainA <- trim.pdb(s1, chain="A", elety="CA")
+
+s1.b <- s1.chainA$atom$b
+s2.b <- s2.chainA$atom$b
+s3.b <- s3.chainA$atom$b
+
+plotb3(s1.b, sse=s1.chainA, typ="l", ylab="Bfactor", top=FALSE, bot=FALSE)
+plotb3(s2.b, sse=s2.chainA, typ="l", ylab="Bfactor", top=FALSE, bot=FALSE)
+plotb3(s3.b, sse=s3.chainA, typ="l", ylab="Bfactor", top=FALSE, bot=FALSE)
+
+```
+
+```{r Q6 class06}
+library(bio3d) 
+ 
+name <- c("4AKE", "1AKE", "1E4Y") 
+
+# contains names of interest proteins whose data will be sourced from PDB
+
+analyze <- function(x){ 
+  protein <- read.pdb(x) 
+  
+  # function takes the name of a protein as argument 
+  # and reads the data from its PDB file
+  
+  protein.chainA <- trim.pdb(protein, chain="A", elety="CA")
+  protein.b <- protein.chainA$atom$b
+  
+  # declared two variables for the data of interest 
+  
+  plotb3 (protein.b, sse=protein.chainA, typ="l", ylab="Bfactor")
+  
+  # output of function is a plot of Bfactor against residue #
+}
+
+for (i in name){
+  analyze(i)
+  
+  # performs function for each vector element in name variable 
+}
+```
+
+

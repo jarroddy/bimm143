@@ -1,0 +1,140 @@
+---
+title: "Class 8 Macine Learning 1"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r cars}
+summary(cars)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+```{r}
+tmp <- c(rnorm(30,-3), rnorm(30,3))
+x <- cbind(x=tmp, y=rev(tmp))
+plot(x)
+```
+```{r}
+kmeans(x, centers = 2, nstart = 20)
+```
+
+```{r}
+plot(x, col = k$cluster)
+points(k$centers, col = "blue", pch = 15)
+```
+
+##Hierarchial clustering
+```{r}
+# First we need to calculate point (dis)similarity
+# as the Euclidean distance between observations
+dist_matrix <- dist(x)
+
+# The hclust() function returns a hierarchical
+# clustering model
+hc <- hclust(d = dist_matrix)
+
+# the print method is not so useful here
+hc
+
+
+```
+
+```{r}
+plot(hc)
+abline(h = 6, col = "red")
+cutree(hc, h = 6)
+```
+
+```{r}
+# Step 1. Generate some example data for clustering
+x <- rbind(
+ matrix(rnorm(100, mean=0, sd = 0.3), ncol = 2), # c1
+ matrix(rnorm(100, mean = 1, sd = 0.3), ncol = 2), # c2
+ matrix(c(rnorm(50, mean = 1, sd = 0.3), # c3
+ rnorm(50, mean = 0, sd = 0.3)), ncol = 2))
+colnames(x) <- c("x", "y")
+
+# Step 2. Plot the data without clustering
+plot(x)
+
+# Step 3. Generate colors for known clusters
+
+# (just so we can compare to hclust results)
+col <- as.factor( rep(c("c1","c2","c3"), each=50) )
+plot(x, col=col)
+```
+
+```{r}
+hc <- hclust(dist(x))
+
+plot(hc)
+abline(h=2, col="red")
+
+grps <- cutree(hc, k=3)
+grps
+```
+
+#PCA Analysis
+```{r}
+mydata <- read.csv("https://tinyurl.com/expression-CSV", row.names=1)
+head(mydata) 
+```
+
+```{r}
+dim(mydata)
+nrow(mydata)
+```
+
+```{r}
+pca <- prcomp(t(mydata), scale = TRUE)
+
+attributes(pca)
+
+plot(pca$x[,1], pca$x[,2])
+```
+
+```{r}
+x <- read.csv("UK_foods.csv", row.names = 1)
+x
+
+```
+
+```{r}
+head_tail <- function(x) {
+  head(x)
+  tail(x)
+  dim(x)
+}
+
+head_tail(x)
+```
+
+```{r}
+pairs(x, col = rainbow(10), pch = 16)
+```
+
+```{r}
+pca <- prcomp(t(x))
+summary(pca)
+```
+```{r}
+plot(pca$x[,1], pca$x[,2])
+```
